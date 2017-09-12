@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>my js course</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./public/style.css">
+  <script src="./public/vue.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <div class="main-header">
+      <div class="container">
+        <h1>JavaScript编程入门</h1>
+      </div>
+      <a class="navbar-brand" href="/js_course.html">成员</a>
+      <a class="navbar-brand" href="/js_words.html">心里话</a>
+      <a class="navbar-brand" href="/js_detail.html">课程详情</a>
+      <a class="navbar-brand" href="/js_homework.html">课程作业</a>
+    </div>
+    <div class="container" id="homeworks">
+      <!-- 我想对老师说 -->
+      <div class="col-md-4 col-xs-12">
+      <div class="panel-heading">
+        <h3 class="panel-title">课程作业</h3>
+      </div>
+      <div class="btn btn-primary" v-on:click="fetchData(1)">第一课作业</div>
+      <div class="btn btn-primary" v-on:click="fetchData(2)">第二课作业</div>
+      <div class="btn btn-primary" v-on:click="fetchData(3)">第三课作业</div>
+      <div class="btn btn-primary" v-on:click="fetchData(4)">第四课作业</div>
+      <div class="btn btn-primary" v-on:click="fetchData(5)">第五课作业</div>
+      <div class="btn btn-primary" v-on:click="fetchData(6)">第六课作业</div>
+      </div>
+      <!-- end of course_detail -->
+
+      <div class="panel panel-default col-md-8  col-xs-12">
+        <div class="panel-heading">
+          <h3 class="panel-title">作业上交 {{homeworkList.length}}</h3>
+        </div>
+        <div class="panel-body">
+          <div class="words-pannel" v-for="item in homeworkList">
+            <div class="media">
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <a v-bind:href="item.url">{{ item.name }}</a>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end of 课表 -->
+
+      </div>
+
+    </div>
+    <!-- end of container -->
+  </div>
+</body>
+
+</html>
+<script>
+  // vue官网： https://cn.vuejs.org/v2/guide/
+  // 初始化Vue
+
+    var homework_data = new Vue({
+      el: '#homeworks',
+      data: {
+        homeworkList: [],
+      },
+      methods: {
+        fetchData: function(num) {
+          axios.get('https://js.xinshengdaxue.com/api/v1/learnJS/course/1/homework/' + num)
+            .then(function (response) {
+              homework_data.homeworkList = response.data.homeworks;
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+      }
+    });
+
+  homework_data.fetchData(1);
+
+</script>
