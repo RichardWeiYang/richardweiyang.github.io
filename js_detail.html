@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>my js course</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./public/style.css">
+  <script src="./public/vue.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <div class="main-header">
+      <div class="container">
+        <h1>JavaScript编程入门</h1>
+      </div>
+      <a class="navbar-brand" href="/js_course.html">成员</a>
+      <a class="navbar-brand" href="/js_words.html">心里话</a>
+      <a class="navbar-brand" href="/js_detail.html">课程详情</a>
+    </div>
+    <div class="container">
+      <!-- 我想对老师说 -->
+      <div class="col-md-4 col-xs-12" id="course_detail">
+      <div class="panel-heading">
+        <h3 class="panel-title">课程详情</h3>
+      </div>
+
+      <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1"><b>{{ title }}</b></span>
+      </div>
+      <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1"><b>{{ teacher }}</b> </span>
+      </div>
+      <div class="input-group">
+          <img class="media-object avatar" v-bind:src="avatar" alt="...">
+      </div>
+      </div>
+      <!-- end of course_detail -->
+
+      <div class="panel panel-default col-md-8  col-xs-12" id="topics">
+        <div class="panel-heading">
+          <h3 class="panel-title">课表</h3>
+        </div>
+        <div class="panel-body">
+          <div class="words-pannel" v-for="item in topicsList">
+            <div class="media">
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <a v-bind:href="item.url">{{ item.title }}</a>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end of 课表 -->
+
+        <div class="panel-heading">
+          <h3 class="panel-title">ppt</h3>
+        </div>
+        <div class="panel-body">
+          <div class="words-pannel" v-for="item in pptList">
+            <div class="media">
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <a v-bind:href="item.url">{{ item.title }}</a>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end of ppt -->
+
+        <div class="panel-heading">
+          <h3 class="panel-title">其他</h3>
+        </div>
+        <div class="panel-body">
+          <div class="words-pannel" v-for="item in gitList">
+            <div class="media">
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <a v-bind:href="item.url">{{ item.title }}</a>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end of 其他 -->
+
+      </div>
+
+    </div>
+    <!-- end of container -->
+  </div>
+</body>
+
+</html>
+<script>
+  // vue官网： https://cn.vuejs.org/v2/guide/
+  // 初始化Vue
+
+  var details = new Vue({
+    el: '#course_detail',   // #details 和html中div#id的 course_detail 对应
+    data: {
+      title: "",
+      teacher:"",
+      avatar:"",
+    },
+    methods: {
+      fetchData: function() {
+        axios.get('https://js.xinshengdaxue.com/api/v1/learnJS/course/1/detail')
+          .then(function (response) {
+            details.title = response.data.courseInfo.title;
+            details.teacher = response.data.courseInfo.teacher;
+            details.avatar = response.data.courseInfo.teacherAvatar;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      },
+    }
+  });
+
+
+    var course_topics = new Vue({
+      el: '#topics',
+      data: {
+        topicsList: [],
+        pptList:[],
+        gitList:[],
+      },
+      methods: {
+        fetchData: function() {
+          axios.get('https://js.xinshengdaxue.com/api/v1/learnJS/course/1/catelog')
+            .then(function (response) {
+              course_topics.topicsList = response.data.catelog.topicsList;
+              course_topics.pptList = response.data.catelog.pptList;
+              course_topics.gitList = response.data.catelog.gitTopicsList;
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+      }
+    });
+
+  details.fetchData();
+  course_topics.fetchData();
+</script>
